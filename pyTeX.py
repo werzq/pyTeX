@@ -1,4 +1,4 @@
-# pyTeX version 0.1 by iamstrawberry
+# pyTeX version 0.2 by iamstrawberry
 
 import os
 
@@ -9,13 +9,12 @@ def editor():
         try:
             command = input((f'[{len(lines)+1}]: '))
 
-
             if command.startswith('$'):
             # Handle commands
                 if command in ('$h', '$help'):
-                    print(info('$h - shows this menu', '$q - quits the editor', '$w - saves the file content', '$z - shows the file content', '$x - clears the file content'))
+                    print(info('|    | Name  | Description                     | Commands      |', '|----|-------|---------------------------------|---------------|', '| 1. | Info  | Gives basic info                | $i, $info     |', '| 2. | Quit  | Quits the editor                | $q, $quit     |', '| 3. | Save  | Saves the file content          | $w, $s, $save |', '| 4. | Show  | Shows the file content          | $z, $show     |', '| 5. | Clear | Clears the file content         | $x, $clear    |', '| 6. | Goto  | Goes to the specified line      | $g, $gt, $goto|', '| 7. | Help  | Displays all available commands | $h, $help     |'))
                 elif command in ('$i', '$info'):
-                    print(info('pyTeX console editor', 'by iamstrawberry', 'version 0.1'))
+                    print(info('pyTeX console editor', 'by iamstrawberry', 'version 0.2'))
                 elif command in ('$q', '$quit'):
                     clear_console()
                     exit()
@@ -28,6 +27,21 @@ def editor():
                     print('\n' + ('\n'.join(lines)+('\n')))
                 elif command in ('$x', '$clear'):
                     lines = []
+                elif command.startswith('$g') or command.startswith('$gt') or command.startswith('$goto'):
+                    parts = command.split()
+                    if len(parts) == 0:
+                        print(info('Usage: $g linenumber'))
+                    elif len(parts) != 2:
+                        print(info('Usage: $g linenumber'))
+                    else:
+                        try:
+                            linenumber = int(parts[1])
+                            if linenumber < 1 or linenumber > len(lines):
+                                print(info('Line number out of range.'))
+                            else:
+                                editor_goto(lines, linenumber)
+                        except ValueError:
+                            print(info('Invalid line number.'))
                 else:
                     print(info(f'Unknown command {command}', 'For a list of commands do $h'))
 
@@ -39,6 +53,12 @@ def editor():
             clear_console()
             exit()
 
+
+def editor_goto(lines, linenumber):
+    line = lines[linenumber-1]
+    print(info(f'Editing line {linenumber}: {line}'))
+    new_line = input(f'[{linenumber}]: ')
+    lines[linenumber-1] = new_line
 
 def info(*messages):
     formatted_messages = []
@@ -56,5 +76,5 @@ def clear_console():
 
 if __name__ == '__main__':
     clear_console()
-    print('pyTeX version 0.1\n')
+    print('pyTeX version 0.2\n')
     editor()

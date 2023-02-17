@@ -10,7 +10,8 @@ a console-based text editor
 | 3. | Save  | Saves the file content          | $w, $s, $save |
 | 4. | Show  | Shows the file content          | $z, $show     |
 | 5. | Clear | Clears the file content         | $x, $clear    |
-| 6. | Help  | Displays all available commands | $h, $help     |
+| 6. | Goto  | Goes to the specified line      | $g, $gt, $goto|
+| 7. | Help  | Displays all available commands | $h, $help     |
 
 ### Setup
 #### Requirements:
