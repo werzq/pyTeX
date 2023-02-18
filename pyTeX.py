@@ -1,6 +1,7 @@
-# pyTeX version 0.3 by iamstrawberry
+# pyTeX version 0.4 by iamstrawberry
 
 import os
+import json
 import easygui
 
 def editor():
@@ -8,25 +9,25 @@ def editor():
     while True:
         try:
             command = input((f'[{len(lines)+1}]: '))
-            if command.startswith('$'):
-            # Handle commands
-                if command in ('$h', '$help'):
-                    print(info('|    | Name  | Description                     | Commands      |',
-                               '|----|-------|---------------------------------|---------------|',
-                               '| 1. | Info  | Gives basic info                | $i, $info     |',
-                               '| 2. | Quit  | Quits the editor                | $q, $quit     |',
-                               '| 3. | Open  | Opens a local file              | $o, $open     |',
-                               '| 4. | Save  | Saves the file content          | $w, $s, $save |',
-                               '| 5. | Show  | Shows the file content          | $z, $show     |',
-                               '| 6. | Clear | Clears the file content         | $x, $clear    |',
-                               '| 7. | Goto  | Goes to the specified line      | $g, $gt, $goto|',
-                               '| 8. | Help  | Displays all available commands | $h, $help     |'))
-                elif command in ('$i', '$info'):
-                    print(info('pyTeX console editor', 'by iamstrawberry', 'version 0.3'))
-                elif command in ('$q', '$quit'):
+            if command.startswith(main_prefix):
+
+                if command in help_prefixes:
+                    print(info('|    | Name  | Description                     | Commands',
+                               '|----|-------|---------------------------------|',
+                               '| 1. | Info  | Gives basic info                | ' + ', '.join(info_prefixes),
+                               '| 2. | Quit  | Quits the editor                | ' + ', '.join(quit_prefixes),
+                               '| 3. | Open  | Opens a local file              | ' + ', '.join(open_prefixes),
+                               '| 4. | Save  | Saves the file content          | ' + ', '.join(save_prefixes),
+                               '| 5. | Show  | Shows the file content          | ' + ', '.join(show_prefixes),
+                               '| 6. | Clear | Clears the file content         | ' + ', '.join(clear_prefixes),
+                               '| 7. | Goto  | Goes to the specified line      | ' + ', '.join(goto_prefixes),
+                               '| 8. | Help  | Displays all available commands | ' + ', '.join(help_prefixes)))
+                elif command in info_prefixes:
+                    print(info('pyTeX console editor', 'by iamstrawberry', 'version 0.4'))
+                elif command in quit_prefixes:
                     clear_console()
                     exit()
-                elif command in ('$w', '$s', '$save'):
+                elif command in save_prefixes:
                     filename = easygui.filesavebox(default=".txt", filetypes=["*.txt"], title="Save File")
                     if filename:
                         with open(filename, 'w') as f:
@@ -35,11 +36,11 @@ def editor():
                         print(info(f'Saved {len(lines)} lines to {file}.'))
                     else:
                         print(info('Cancelled file save'))
-                elif command in ('$z', '$show'):
+                elif command in show_prefixes:
                     print('\n' + ('\n'.join(lines)+('\n')))
-                elif command in ('$x', '$clear'):
+                elif command in clear_prefixes:
                     lines = []
-                elif command.startswith('$g') or command.startswith('$gt') or command.startswith('$goto'):
+                elif any(command.startswith(prefix) for prefix in goto_prefixes):
                     parts = command.split()
                     if len(parts) == 0:
                         print(info('Usage: $g linenumber'))
@@ -54,7 +55,7 @@ def editor():
                                 editor_goto(lines, linenumber)
                         except ValueError:
                             print(info('Invalid line number.'))
-                elif command in ('$o', '$open'):
+                elif command in open_prefixes:
                     filename = easygui.fileopenbox()
                     try:
                         if filename is None:
@@ -96,5 +97,36 @@ def clear_console():
 
 if __name__ == '__main__':
     clear_console()
-    print('pyTeX version 0.3\n')
+    default_data = {
+    "prefix": "$",
+    "info": ["$i", "$info"],
+    "quit": ["$q", "$quit"],
+    "open": ["$o", "$open"],
+    "save": ["$w", "$s", "$save"],
+    "show": ["$z", "$show"],
+    "clear": ["$x", "$clear"],
+    "goto": ["$g", "$gt", "$goto"],
+    "help": ["$h", "$help"]
+    }
+
+    if os.path.exists("config.json"):
+        with open("config.json", "r") as f:
+            data = json.load(f)
+    else:
+        with open("config.json", "w") as f:
+            json.dump(default_data, f, indent=(6-2))
+        data = default_data
+
+    main_prefix = data["prefix"]
+
+    info_prefixes = data["info"]
+    quit_prefixes = data["quit"]
+    open_prefixes = data["open"]
+    save_prefixes = data["save"]
+    show_prefixes = data["show"]
+    clear_prefixes = data["clear"]
+    goto_prefixes = data["goto"]
+    help_prefixes = data["help"]
+
+    print('pyTeX version 0.4\n')
     editor()
