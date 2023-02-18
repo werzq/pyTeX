@@ -1,6 +1,5 @@
 # pyTeX
 a console-based text editor
-
 ### Commands
 
 | •  | Name  | Description                     | Commands      |
@@ -24,19 +23,18 @@ a console-based text editor
 
 
       git clone https://github.com/iamstrawberry/pyTeX
-     
+
+
 - **Step 2:** Change directory to pyTeX
 
 
       cd pyTeX
       
-- **Step 3:** run `pyTeX.py` using python
+
+- **Step 3:** run `start.bat`
 
 
-      python pyTeX.py
+      start.bat      
       
       
-      
-      
-     
 <h6 align='right'>By iamstrawberry</h6>
