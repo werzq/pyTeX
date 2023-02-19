@@ -1,12 +1,13 @@
 {
     "prefix": "$",
-
-    "info": ["$i", "$info"],
-    "quit": ["$q", "$quit"],
-    "open": ["$o", "$open"],
-    "save": ["$w", "$s", "$save"],
-    "show": ["$z", "$show"],
-    "clear": ["$x", "$clear"],
-    "goto": ["$g", "$gt", "$goto"],
-    "help": ["$h", "$help"]
+    "commands": {
+        "info": ["i", "info"],
+        "quit": ["q", "quit"],
+        "open": ["o", "open"],
+        "save": ["w", "s", "save"],
+        "show": ["z", "show"],
+        "clear": ["x", "clear"],
+        "goto": ["g", "gt", "goto"],
+        "help": ["h", "help"]
+    }
 }

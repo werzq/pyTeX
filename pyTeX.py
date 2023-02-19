@@ -1,4 +1,4 @@
-# pyTeX version 0.4 by iamstrawberry
+# pyTeX version 0.5 by iamstrawberry
 
 import os
 import json
@@ -23,7 +23,7 @@ def editor():
                                '| 7. | Goto  | Goes to the specified line      | ' + ', '.join(goto_prefixes),
                                '| 8. | Help  | Displays all available commands | ' + ', '.join(help_prefixes)))
                 elif command in info_prefixes:
-                    print(info('pyTeX console editor', 'by iamstrawberry', 'version 0.4'))
+                    print(info('pyTeX console editor', 'by iamstrawberry', 'version 0.5'))
                 elif command in quit_prefixes:
                     clear_console()
                     exit()
@@ -43,9 +43,9 @@ def editor():
                 elif any(command.startswith(prefix) for prefix in goto_prefixes):
                     parts = command.split()
                     if len(parts) == 0:
-                        print(info('Usage: $g linenumber'))
+                        print(info(f'Usage: {goto_prefixes[0]} linenumber'))
                     elif len(parts) != 2:
-                        print(info('Usage: $g linenumber'))
+                        print(info(f'Usage: {goto_prefixes[0]} linenumber'))
                     else:
                         try:
                             linenumber = int(parts[1])
@@ -69,7 +69,7 @@ def editor():
                         print(info(f'File not found: {filename}.'))
                 
                 else:
-                    print(info(f'Unknown command {command}', 'For a list of commands do $h'))
+                    print(info(f'Unknown command {command}', f'For a list of commands do {help_prefixes[0]}'))
             else:
                 lines.append(command)
 
@@ -99,15 +99,17 @@ if __name__ == '__main__':
     clear_console()
     default_data = {
     "prefix": "$",
-    "info": ["$i", "$info"],
-    "quit": ["$q", "$quit"],
-    "open": ["$o", "$open"],
-    "save": ["$w", "$s", "$save"],
-    "show": ["$z", "$show"],
-    "clear": ["$x", "$clear"],
-    "goto": ["$g", "$gt", "$goto"],
-    "help": ["$h", "$help"]
+    "commands": {
+        "info": ["i", "info"],
+        "quit": ["q", "quit"],
+        "open": ["o", "open"],
+        "save": ["w", "s", "save"],
+        "show": ["z", "show"],
+        "clear": ["x", "clear"],
+        "goto": ["g", "gt", "goto"],
+        "help": ["h", "help"]
     }
+}
 
     if os.path.exists("config.json"):
         with open("config.json", "r") as f:
@@ -119,14 +121,14 @@ if __name__ == '__main__':
 
     main_prefix = data["prefix"]
 
-    info_prefixes = data["info"]
-    quit_prefixes = data["quit"]
-    open_prefixes = data["open"]
-    save_prefixes = data["save"]
-    show_prefixes = data["show"]
-    clear_prefixes = data["clear"]
-    goto_prefixes = data["goto"]
-    help_prefixes = data["help"]
+    info_prefixes = [main_prefix + prefix for prefix in data["commands"]["info"]]
+    quit_prefixes = [main_prefix + prefix for prefix in data["commands"]["quit"]]
+    open_prefixes = [main_prefix + prefix for prefix in data["commands"]["open"]]
+    save_prefixes = [main_prefix + prefix for prefix in data["commands"]["save"]]
+    show_prefixes = [main_prefix + prefix for prefix in data["commands"]["show"]]
+    clear_prefixes = [main_prefix + prefix for prefix in data["commands"]["clear"]]
+    goto_prefixes = [main_prefix + prefix for prefix in data["commands"]["goto"]]
+    help_prefixes = [main_prefix + prefix for prefix in data["commands"]["help"]]
 
-    print('pyTeX version 0.4\n')
+    print('pyTeX version 0.5\n')
     editor()
