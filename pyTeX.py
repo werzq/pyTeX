@@ -1,8 +1,44 @@
 # pyTeX version 0.5 by iamstrawberry
 
 import os
+import sys
 import json
 import easygui
+
+def init_config():
+    default_data = {
+        "prefix": "$",
+        "commands": {
+            "info": ["i", "info"],
+            "quit": ["q", "quit"],
+            "open": ["o", "open"],
+            "save": ["w", "s", "save"],
+            "show": ["z", "show"],
+            "clear": ["x", "clear"],
+            "goto": ["g", "gt", "goto"],
+            "help": ["h", "help"]
+        }
+    }
+    
+    if os.path.exists("config.json"):
+        with open("config.json", "r") as f:
+            data = json.load(f)
+    else:
+        with open("config.json", "w") as f:
+            json.dump(default_data, f, indent=(6-2))
+        data = default_data
+    
+    main_prefix = data["prefix"]
+    info_prefixes = [main_prefix + prefix for prefix in data["commands"]["info"]]
+    quit_prefixes = [main_prefix + prefix for prefix in data["commands"]["quit"]]
+    open_prefixes = [main_prefix + prefix for prefix in data["commands"]["open"]]
+    save_prefixes = [main_prefix + prefix for prefix in data["commands"]["save"]]
+    show_prefixes = [main_prefix + prefix for prefix in data["commands"]["show"]]
+    clear_prefixes = [main_prefix + prefix for prefix in data["commands"]["clear"]]
+    goto_prefixes = [main_prefix + prefix for prefix in data["commands"]["goto"]]
+    help_prefixes = [main_prefix + prefix for prefix in data["commands"]["help"]]
+    
+    return (main_prefix, info_prefixes, quit_prefixes, open_prefixes, save_prefixes, show_prefixes, clear_prefixes, goto_prefixes, help_prefixes)
 
 def editor():
     lines = []
@@ -26,13 +62,13 @@ def editor():
                     print(info('pyTeX console editor', 'by iamstrawberry', 'version 0.5'))
                 elif command in quit_prefixes:
                     clear_console()
-                    exit()
+                    sys.exit()
                 elif command in save_prefixes:
                     filename = easygui.filesavebox(default=".txt", filetypes=["*.txt"], title="Save File")
                     if filename:
                         with open(filename, 'w') as f:
                             f.write('\n'.join(lines))
-                        file = filename.split('\\')[-1]
+                        file = os.path.split(filename)
                         print(info(f'Saved {len(lines)} lines to {file}.'))
                     else:
                         print(info('Cancelled file save'))
@@ -42,9 +78,7 @@ def editor():
                     lines = []
                 elif any(command.startswith(prefix) for prefix in goto_prefixes):
                     parts = command.split()
-                    if len(parts) == 0:
-                        print(info(f'Usage: {goto_prefixes[0]} linenumber'))
-                    elif len(parts) != 2:
+                    if len(parts) != 2:
                         print(info(f'Usage: {goto_prefixes[0]} linenumber'))
                     else:
                         try:
@@ -61,9 +95,9 @@ def editor():
                         if filename is None:
                             print(info('No file selected'))
                         else:
-                            file = filename.split('\\')[-1]
+                            file = os.path.split(filename)
                             with open(filename, 'r') as f:
-                                lines = f.read().splitlines()
+                                lines = f.readlines().splitlines()
                             print(info(f'Opened {file}'))
                     except FileNotFoundError:
                         print(info(f'File not found: {filename}.'))
@@ -75,7 +109,7 @@ def editor():
 
         except KeyboardInterrupt:
             clear_console()
-            exit()
+            sys.exit()
 
 def editor_goto(lines, linenumber):
     line = lines[linenumber-1]
@@ -97,38 +131,16 @@ def clear_console():
 
 if __name__ == '__main__':
     clear_console()
-    default_data = {
-    "prefix": "$",
-    "commands": {
-        "info": ["i", "info"],
-        "quit": ["q", "quit"],
-        "open": ["o", "open"],
-        "save": ["w", "s", "save"],
-        "show": ["z", "show"],
-        "clear": ["x", "clear"],
-        "goto": ["g", "gt", "goto"],
-        "help": ["h", "help"]
-    }
-}
-
-    if os.path.exists("config.json"):
-        with open("config.json", "r") as f:
-            data = json.load(f)
-    else:
-        with open("config.json", "w") as f:
-            json.dump(default_data, f, indent=(6-2))
-        data = default_data
-
-    main_prefix = data["prefix"]
-
-    info_prefixes = [main_prefix + prefix for prefix in data["commands"]["info"]]
-    quit_prefixes = [main_prefix + prefix for prefix in data["commands"]["quit"]]
-    open_prefixes = [main_prefix + prefix for prefix in data["commands"]["open"]]
-    save_prefixes = [main_prefix + prefix for prefix in data["commands"]["save"]]
-    show_prefixes = [main_prefix + prefix for prefix in data["commands"]["show"]]
-    clear_prefixes = [main_prefix + prefix for prefix in data["commands"]["clear"]]
-    goto_prefixes = [main_prefix + prefix for prefix in data["commands"]["goto"]]
-    help_prefixes = [main_prefix + prefix for prefix in data["commands"]["help"]]
-
+    (
+        main_prefix,
+        info_prefixes,
+        quit_prefixes,
+        open_prefixes, 
+        save_prefixes, 
+        show_prefixes, 
+        clear_prefixes, 
+        goto_prefixes, 
+        help_prefixes
+    ) = init_config()
     print('pyTeX version 0.5\n')
     editor()
