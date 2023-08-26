@@ -48,7 +48,7 @@ These are the contents with default settings in `config.json`
 ```
 - **prefix:** It is used to indicate the beginning of a command.
 > **Tip -** It is best to keep the prefix as a symbol that isnt common yet easy to reach. eg: $, !, ~, etc.
-- **commands:** list of instructions that you can use to interact with pyTeX and perform various actions. As of version `0.5` there are **8** commands. They are:
+- **commands:** list of instructions that you can use to interact with pyTeX and perform various actions. As of version `0.6` there are **8** commands. They are:
 
 | •  | Name  | Description                     | Default Commands |
 |----|-------|---------------------------------|------------------|
